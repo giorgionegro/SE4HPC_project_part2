@@ -20,8 +20,8 @@ jobs:
       uses: actions/cache@v3
       with:
         path: |
-          /usr/local/lib/openmpi
-          /usr/local/include/openmpi
+          /usr/bin
+          /usr/local/bin
         key: ${{ runner.os }}-openmpi-${{ hashFiles('**/CMakeLists.txt') }}
         restore-keys: |
           ${{ runner.os }}-openmpi-
