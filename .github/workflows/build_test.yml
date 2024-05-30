@@ -16,8 +16,32 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: Set up cache for dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          /usr/local/lib/openmpi
+          /usr/local/include/openmpi
+          ~/.cache
+        key: ${{ runner.os }}-openmpi-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-openmpi-
+
+    - name: Install MPI
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y openmpi-bin openmpi-common libopenmpi-dev
+
+    - name: Set up cache for CMake build
+      uses: actions/cache@v3
+      with:
+        path: ${{github.workspace}}/build
+        key: ${{ runner.os }}-build-${{ hashFiles('**/CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-build-
+
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DMPI_C_COMPILER=mpicc -DMPI_CXX_COMPILER=mpicxx
 
     - name: Build
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
@@ -25,4 +49,3 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: ctest -C ${{env.BUILD_TYPE}}
-
