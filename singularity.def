@@ -23,7 +23,7 @@ From: ubuntu:20.04
         libgtest-dev \
         mpich \
         git \
-        tzdata
+        tzdata openmpi-bin openmpi-common libopenmpi-dev
 
     # Install Google Test
     cd /usr/src/gtest
@@ -48,11 +48,12 @@ From: ubuntu:20.04
 %runscript
     # Command to run when the container starts
     cd /project
+    git submodule update --init --recursive
     mkdir -p build
     cd build
     cmake ..
     make
-    mpirun -np 4 ./main
+    mpirun -np 2 ./main
 
 %test
     # Command to test the application
