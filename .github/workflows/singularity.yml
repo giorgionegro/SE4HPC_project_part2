@@ -67,7 +67,5 @@ jobs:
 
     - name: Build Singularity image
       run: singularity build --fakeroot matrix_multiplication.sif singularity.def
-    - name: Setup upterm session
-      uses: lhotari/action-upterm@v1
     - name: Run tests
       run: singularity run matrix_multiplication.sif
