@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:20.04
+From: debian
 
 %labels
     Author Your Name
@@ -23,14 +23,16 @@ From: ubuntu:20.04
         libgtest-dev \
         mpich \
         git \
-        tzdata openmpi-bin openmpi-common libopenmpi-dev
+        tzdata \
+        openmpi-bin \
+        openmpi-common \
+        libopenmpi-dev
 
     # Install Google Test
     cd /usr/src/gtest
     cmake CMakeLists.txt
     make
     mv lib/*.a /usr/lib
-
     # Clean up
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -39,19 +41,18 @@ From: ubuntu:20.04
 %files
     # Copy the CMake project files to the container
     CMakeLists.txt /project/CMakeLists.txt
-    include/ /project/include/
-    src/ /project/src/
-    test/ /project/test/
-    googletest/ /project/googletest/
-    lib/ /project/lib/
+    include/ /project/
+    src/ /project/
+    test/ /project/
+    googletest/ /project/
+    lib/ /project/
 
-%runscript
-    # Command to run when the container starts
-    cd /project
-    cmake  -DCMAKE_BUILD_TYPE=Release -DMPI_C_COMPILER=mpicc -DMPI_CXX_COMPILER=mpicxx   
-    make
+
+
 
 %test
     # Command to test the application
     cd /project/
+    cmake .
+    make
     ctest -C Release --output-on-failure

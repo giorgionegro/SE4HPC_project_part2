@@ -30,6 +30,10 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-buildx-
           
+
+    - name: Clone submodules
+      run: git submodule update --init --recursive
+
     - name: Set timezone and DEBIAN_FRONTEND
       run: |
         echo "tzdata tzdata/Areas select Etc" | sudo debconf-set-selections
@@ -66,6 +70,6 @@ jobs:
 
 
     - name: Build Singularity image
-      run: singularity build --fakeroot matrix_multiplication.sif singularity.def
+      run: singularity build --fakeroot --notest --force matrix_multiplication.sif singularity.def
     - name: Run tests
-      run: singularity run matrix_multiplication.sif
+      run: singularity test --fakeroot --writable matrix_multiplication.sif
