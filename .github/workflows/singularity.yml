@@ -33,7 +33,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev
+        sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap
 
     - name: Install Go
       run: |
@@ -52,8 +52,14 @@ jobs:
         make -C builddir 
         sudo make -C builddir install
 
+    - name: Enable user namespaces
+      run: |
+        sudo sysctl -w kernel.unprivileged_userns_clone=1
+        sudo sysctl -w user.max_user_namespaces=15000
+
+
     - name: Build Singularity image
-      run: singularity build matrix_multiplication.sif singularity.def
+      run: singularity build --fakeroot matrix_multiplication.sif singularity.def
 
     - name: Run tests
       run: singularity run matrix_multiplication.sif
