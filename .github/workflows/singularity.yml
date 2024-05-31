@@ -29,16 +29,18 @@ jobs:
         key: ${{ runner.os }}-buildx-${{ github.sha }}
         restore-keys: |
           ${{ runner.os }}-buildx-
-
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap
-
-    - name: Set timezone to avoid tzdata prompt
+          
+    - name: Set timezone and DEBIAN_FRONTEND
       run: |
         echo "tzdata tzdata/Areas select Etc" | sudo debconf-set-selections
         echo "tzdata tzdata/Zones/Etc select UTC" | sudo debconf-set-selections
+        export DEBIAN_FRONTEND=noninteractive
+        
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap tzdata
+
 
     - name: Install Go
       run: |
