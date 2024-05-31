@@ -48,7 +48,6 @@ From: ubuntu:20.04
 %runscript
     # Command to run when the container starts
     cd /project
-    git submodule update --init --recursive
     cmake  -DCMAKE_BUILD_TYPE=Release -DMPI_C_COMPILER=mpicc -DMPI_CXX_COMPILER=mpicxx   
     make
 
