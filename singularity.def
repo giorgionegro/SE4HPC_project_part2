@@ -1,0 +1,52 @@
+Bootstrap: docker
+From: ubuntu:20.04
+
+%labels
+    Author Your Name
+    Version 1.0
+    Description Matrix Multiplication Program with CMake and MPI
+
+%post
+    # Update and install required packages
+    apt-get update && apt-get install -y \
+        cmake \
+        build-essential \
+        libgtest-dev \
+        mpich \
+        git
+
+    # Install Google Test
+    cd /usr/src/gtest
+    cmake CMakeLists.txt
+    make
+    mv lib/*.a /usr/lib
+
+    # Clean up
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+%environment
+    # Set environment variables
+    export PATH=/usr/local/bin:$PATH
+
+%files
+    # Copy the CMake project files to the container
+    CMakeLists.txt /project/CMakeLists.txt
+    include/ /project/include/
+    src/ /project/src/
+    test/ /project/test/
+    googletest/ /project/googletest/
+    lib/ /project/lib/
+
+%runscript
+    # Command to run when the container starts
+    cd /project
+    mkdir -p build
+    cd build
+    cmake ..
+    make
+    mpirun -np 4 ./main
+
+%test
+    # Command to test the application
+    cd /project/build
+    ctest --output-on-failure
