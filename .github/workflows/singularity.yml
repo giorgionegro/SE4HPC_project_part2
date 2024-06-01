@@ -46,17 +46,17 @@ jobs:
         sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap tzdata wget
 
         
-    - name: Cache Go
-      id: go-cache
-      uses: actions/cache@v2
-      with:
-        path: /usr/local/go
-        key: ${{ runner.os }}-go-1.19.4
-        restore-keys: |
-          ${{ runner.os }}-go-
+    # - name: Cache Go
+    #   id: go-cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: /usr/local/go
+    #     key: ${{ runner.os }}-go-1.19.4
+    #     restore-keys: |
+    #       ${{ runner.os }}-go-
 
     - name: Install Go
-      if: steps.go-cache.outputs.cache-hit != 'true'
+     # if: steps.go-cache.outputs.cache-hit != 'true'
       run: |
         wget https://dl.google.com/go/go1.19.4.linux-amd64.tar.gz
         sudo tar -C /usr/local -xzf go1.19.4.linux-amd64.tar.gz
@@ -64,17 +64,17 @@ jobs:
         source $GITHUB_ENV
         
 
-    - name: Cache Singularity
-      id: singularity-cache
-      uses: actions/cache@v2
-      with:
-        path: /usr/local/singularity
-        key: ${{ runner.os }}-singularity-4.1.3
-        restore-keys: |
-          ${{ runner.os }}-singularity-
+    # - name: Cache Singularity
+    #   id: singularity-cache
+    #   uses: actions/cache@v2
+    #   with:
+    #     path: /usr/local/singularity
+    #     key: ${{ runner.os }}-singularity-4.1.3
+    #     restore-keys: |
+    #       ${{ runner.os }}-singularity-
 
     - name: Install Singularity
-      if: steps.singularity-cache.outputs.cache-hit != 'true'
+     # if: steps.singularity-cache.outputs.cache-hit != 'true'
       run: |
         export VERSION=4.1.3 && # adjust this as necessary 
         wget https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz
