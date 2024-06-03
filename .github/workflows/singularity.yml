@@ -49,11 +49,14 @@ jobs:
         source $GITHUB_ENV
         
 
+      # Cache Singularity binary
     - name: Cache Singularity
       id: singularity-cache
       uses: actions/cache@v2
       with:
-        path: /usr/local/singularity
+        path: /usr/local/bin/singularity
+              /usr/local/lib/singularity
+              /usr/local/include/singularity
         key: ${{ runner.os }}-singularity-4.1.3
         restore-keys: |
           ${{ runner.os }}-singularity-
@@ -68,7 +71,6 @@ jobs:
         ./mconfig 
         make -C builddir 
         sudo make -C builddir install
-        which singularity
 
 
       
