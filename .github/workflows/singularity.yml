@@ -28,7 +28,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap tzdata wget go
+        sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap tzdata wget
 
       
        # Install Go if not cached
