@@ -81,7 +81,8 @@ jobs:
         cp /usr/local/bin/singularity $HOME/.singularity/bin/
         echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
         source $HOME/.bashrc
-    - name: Set PATH Go
+    
+    - name: Set PATH Singularity
       if: steps.singularity-cache.outputs.cache-hit  == 'true'
       run: |
         echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
