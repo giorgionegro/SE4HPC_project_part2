@@ -9,26 +9,26 @@ on:
       - main
 
 jobs:
-  build:
+  Build_Containerize:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v2
-
-    - name: Cache Docker layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: ${{ runner.os }}-buildx-${{ github.sha }}
-        restore-keys: |
-          ${{ runner.os }}-buildx-
+#    - name: Set up QEMU
+#      uses: docker/setup-qemu-action@v2
+#
+#    - name: Set up Docker Buildx
+#      uses: docker/setup-buildx-action@v2
+#
+#    - name: Cache Docker layers
+#      uses: actions/cache@v2
+#      with:
+#        path: /tmp/.buildx-cache
+#        key: ${{ runner.os }}-buildx-${{ github.sha }}
+#        restore-keys: |
+#          ${{ runner.os }}-buildx-
           
 
     - name: Clone submodules
@@ -83,6 +83,7 @@ jobs:
         ./mconfig 
         make -C builddir 
         sudo make -C builddir install
+
     - name: Enable user namespaces
       run: |
         sudo sysctl -w kernel.unprivileged_userns_clone=1
@@ -91,5 +92,7 @@ jobs:
 
     - name: Build Singularity image
       run: singularity build --fakeroot --notest --force matrix_multiplication.sif singularity.def
+
+
     - name: Run tests
       run: singularity test --fakeroot --writable matrix_multiplication.sif
