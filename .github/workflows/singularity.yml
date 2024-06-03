@@ -79,16 +79,7 @@ jobs:
         sudo make -C builddir install
         mkdir -p $HOME/.singularity/bin
         mv /usr/local/bin/singularity $HOME/.singularity/bin/singularity
-        echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
-        source $HOME/.bashrc
-        echo 'export PATH=$HOME/.singularity/bin:$PATH' >>  $GITHUB_ENV
-        source $GITHUB_ENV
     
-    - name: Set PATH Singularity
-      if: steps.singularity-cache.outputs.cache-hit  == 'true'
-      run: |
-        echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $GITHUB_ENV
-        source $GITHUB_ENV
 
       
 
@@ -99,8 +90,8 @@ jobs:
 
 
     - name: Build Singularity image
-      run: singularity build --fakeroot --notest --force matrix_multiplication.sif singularity.def
+      run: $HOME/.singularity/bin/singularity build --fakeroot --notest --force matrix_multiplication.sif singularity.def
 
 
     - name: Run tests
-      run: singularity test --fakeroot --writable matrix_multiplication.sif
+      run: $HOME/.singularity/bin/singularity test --fakeroot --writable matrix_multiplication.sif
