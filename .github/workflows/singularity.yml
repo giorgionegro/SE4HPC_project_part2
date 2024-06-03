@@ -68,8 +68,7 @@ jobs:
         ./mconfig 
         make -C builddir 
         sudo make -C builddir install
-        cd /usr/local/
-        ls 
+        which singularity
 
 
       
