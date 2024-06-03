@@ -78,9 +78,12 @@ jobs:
         make -C builddir
         sudo make -C builddir install
         mkdir -p $HOME/.singularity/bin
-        mv /usr/local/bin/singularity $HOME/.singularity/bin/singularity
+        cp /usr/local/bin/singularity $HOME/.singularity/bin/singularity
     
-
+    - name: Install Singularity
+      if: steps.singularity-cache.outputs.cache-hit == 'true'
+      run: |
+        sudo cp  $HOME/.singularity/bin/singularity /usr/local/bin/singularity
       
 
     - name: Enable user namespaces
