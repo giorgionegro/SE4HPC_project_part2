@@ -78,7 +78,7 @@ jobs:
         make -C builddir
         sudo make -C builddir install
         mkdir -p $HOME/.singularity/bin
-        cp e /usr/local/bin/singularity $HOME/.singularity/bin/
+        cp /usr/local/bin/singularity $HOME/.singularity/bin/
         echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
         source $HOME/.bashrc
     - name: Set PATH Go
