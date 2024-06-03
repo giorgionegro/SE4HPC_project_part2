@@ -47,14 +47,14 @@ jobs:
       run: |
         wget https://dl.google.com/go/go1.19.4.linux-amd64.tar.gz
         tar -C $HOME -xzf go1.19.4.linux-amd64.tar.gz
-        echo 'export PATH=$HOME/go/bin:$PATH' >> $HOME/.bashrc
-        source $HOME/.bashrc
+        echo 'export PATH=$HOME/go/bin:$PATH' >> $GITHUB_ENV
+        source $GITHUB_ENV
 
     - name: Set PATH Go
       if: steps.go-cache.outputs.cache-hit == 'true'
       run: |
-        echo 'export PATH=$HOME/go/bin:$PATH' >> $HOME/.bashrc
-        source $HOME/.bashrc
+        echo 'export PATH=$HOME/go/bin:$PATH' >> $GITHUB_ENV
+        source $GITHUB_ENV
       
     # Cache Singularity installation
     - name: Cache Singularity
@@ -81,12 +81,14 @@ jobs:
         mv /usr/local/bin/singularity $HOME/.singularity/bin/singularity
         echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
         source $HOME/.bashrc
+        echo 'export PATH=$HOME/.singularity/bin:$PATH' >>  $GITHUB_ENV
+        source $GITHUB_ENV
     
     - name: Set PATH Singularity
       if: steps.singularity-cache.outputs.cache-hit  == 'true'
       run: |
-        echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
-        source $HOME/.bashrc
+        echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $GITHUB_ENV
+        source $GITHUB_ENV
 
       
 
