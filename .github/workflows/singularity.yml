@@ -31,47 +31,60 @@ jobs:
         sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap tzdata wget
 
         
+     # Cache Go installation
     - name: Cache Go
       id: go-cache
       uses: actions/cache@v2
       with:
-        path: /usr/local/go
+        path: ~/.go
         key: ${{ runner.os }}-go-1.19.4
         restore-keys: |
           ${{ runner.os }}-go-
 
+    # Install Go if not cached
     - name: Install Go
       if: steps.go-cache.outputs.cache-hit != 'true'
       run: |
         wget https://dl.google.com/go/go1.19.4.linux-amd64.tar.gz
-        sudo tar -C /usr/local -xzf go1.19.4.linux-amd64.tar.gz
-        echo 'export PATH=$PATH:/usr/local/go/bin' >> $GITHUB_ENV
-        source $GITHUB_ENV
-        
+        tar -C $HOME -xzf go1.19.4.linux-amd64.tar.gz
+        echo 'export PATH=$HOME/go/bin:$PATH' >> $HOME/.bashrc
+        source $HOME/.bashrc
 
-      # Cache Singularity binary
+    - name: Set PATH Go
+      if: steps.go-cache.outputs.cache-hit == 'true'
+      run: |
+        echo 'export PATH=$HOME/go/bin:$PATH' >> $HOME/.bashrc
+        source $HOME/.bashrc
+      
+    # Cache Singularity installation
     - name: Cache Singularity
       id: singularity-cache
       uses: actions/cache@v2
       with:
-        path: /usr/local/bin/singularity
-              /usr/local/lib/singularity
-              /usr/local/include/singularity
+        path: ~/.singularity
         key: ${{ runner.os }}-singularity-4.1.3
         restore-keys: |
           ${{ runner.os }}-singularity-
 
+    # Install Singularity if not cached
     - name: Install Singularity
       if: steps.singularity-cache.outputs.cache-hit != 'true'
       run: |
-        export VERSION=4.1.3 && # adjust this as necessary 
+        export VERSION=4.1.3
         wget https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz
-        tar -xzf singularity-ce-${VERSION}.tar.gz 
-        cd singularity-ce-4.1.3 
-        ./mconfig 
-        make -C builddir 
-        sudo make -C builddir install
-
+        tar -xzf singularity-ce-${VERSION}.tar.gz
+        cd singularity-ce-${VERSION}
+        ./mconfig
+        make -C builddir
+        mkdir -p $HOME/.singularity/bin
+        cp bin/singularity $HOME/.singularity/bin/singularity
+        echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
+        source $HOME/.bashrc
+    - name: Set PATH Go
+      if: steps.singularity-cache.outputs.cache-hit  == 'true'
+      run: |
+        echo 'export PATH=$HOME/.singularity/bin:$PATH' >> $HOME/.bashrc
+        source $HOME/.bashrc
 
       
 
