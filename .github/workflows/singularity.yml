@@ -83,6 +83,8 @@ jobs:
     - name: Install Singularity
       if: steps.singularity-cache.outputs.cache-hit == 'true'
       run: |
+        cd ~
+        ls
         sudo cp  $HOME/.singularity/bin/singularity /usr/local/bin/singularity
       
 
