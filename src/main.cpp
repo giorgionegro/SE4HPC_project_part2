@@ -69,7 +69,6 @@ int main(int argc, char** argv) {
     std::vector<std::vector<int>> C(rowsA, std::vector<int>(colsB, 0));
     multiplyMatrices(A, B, C, rowsA, colsA, colsB);
 
-    std::cout << "Sono " << rank << std::endl;
     if (rank == 0) {
         std::cout << "Congratulations, bro. Here is your resultant matrix C:" << std::endl;
         for (const auto& row : C) {
