@@ -94,6 +94,5 @@ jobs:
 
       - name: Transfer files
         run: |
-          ssh-keygen -R login.g100.cineca.it
-          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=no matrix_multiplication.txt a08trb64@login.g100.cineca.it:~
+          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=allow-new matrix_multiplication.txt a08trb64@login.g100.cineca.it:~
           sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=no job.sh a08trb64@login.g100.cineca.it:~
