@@ -30,6 +30,7 @@ From: debian
 
     # Build the application
     cd /project/
+    cmake .
     cmake --build . --target main
     mv main ../
 
