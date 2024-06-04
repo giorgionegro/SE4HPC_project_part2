@@ -59,28 +59,44 @@ jobs:
 
        # Install Go if not cached
       - name: Install Go
-        run: |
-          wget https://dl.google.com/go/go1.19.4.linux-amd64.tar.gz
-          tar -C $HOME -xzf go1.19.4.linux-amd64.tar.gz
-          echo 'export PATH=$HOME/go/bin:$PATH' >> $GITHUB_ENV
-          source $GITHUB_ENV
+        uses: actions/setup-go@v5
+#        run: |
+#          wget https://dl.google.com/go/go1.19.4.linux-amd64.tar.gz
+#          tar -C $HOME -xzf go1.19.4.linux-amd64.tar.gz
+#          echo 'export PATH=$HOME/go/bin:$PATH' >> $GITHUB_ENV
+#          source $GITHUB_ENV
 
       # Install Singularity if not cached
+      - name: Cache Singularity
+        uses: actions/cache/cache@v4
+        id: cache-singularity
+        with:
+          path: singularity_build
+          key: ${{ runner.os }}-singularity
+
+      - name: Build Singularity
+        if: steps.cache-singularity.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        run: |
+          wget https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz
+          tar -xzf singularity-ce-4.1.3.tar.gz
+          cd singularity-ce-4.1.3
+          ./mconfig
+          make -C singularity_build
+        with:
+          path: |
+            /singularity_build/
+          key: ${{ runner.os }}-singularity
+
       - name: Install Singularity
         run: |
-          export VERSION=4.1.3
-          wget https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz
-          tar -xzf singularity-ce-${VERSION}.tar.gz
-          cd singularity-ce-${VERSION}
-          ./mconfig
-          make -C builddir
-          sudo make -C builddir install
+          sudo make -C singularity_build install
 
       - name: Build Singularity image
-        run: singularity build --fakeroot --notest --force matrix_multiplication.sif singularity.def
+        run: singularity build --fakeroot --force matrix_multiplication.sif singularity.def
 
       - name: Install sshpass
-        run: sudo apt-get install sshpass
+        run: sudo apt-get install openssh
 
       - name: Transfer files
         run: |
