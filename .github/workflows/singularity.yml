@@ -92,7 +92,7 @@ jobs:
 
       - name: Transfer files and Run Job
         run: |
-          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=accept-new matrix_multiplication.sif a08trb64@login.g100.cineca.it:~
-          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=no job.sh a08trb64@login.g100.cineca.it:~
-          sshpass -p ${SSH_KEY} ssh -o StrictHostKeyChecking=no a08trb64@login.g100.cineca.it -t "exec sbatch job.sh"
+          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=accept-new matrix_multiplication.sif job.sh a08trb64@login.g100.cineca.it:~
+          ssh-keygen -R login.g100.cineca.it
+          sshpass -p ${SSH_KEY} ssh -o StrictHostKeyChecking=accept-new a08trb64@login.g100.cineca.it -t "exec sbatch job.sh"
           
