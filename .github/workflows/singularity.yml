@@ -89,7 +89,7 @@ jobs:
         run: singularity build --fakeroot --force matrix_multiplication.sif singularity.def
 
       - name: Install sshpass
-        run: sudo apt-get install openssh
+        run: sudo apt-get install openssh-client
 
       - name: Transfer files
         run: |
