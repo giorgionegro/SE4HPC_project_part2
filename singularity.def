@@ -4,7 +4,7 @@ From: debian
 %labels
     Negro-Tirri
     Version 1.0
-    Description Matrix Multiplication Program with CMake and MPI
+    Matrix Multiplication Program with CMake and MPI
 
 %environment
     # Set environment variables
@@ -28,13 +28,10 @@ From: debian
         openmpi-common \
         libopenmpi-dev
 
-    # Install Google Test
-    cd /usr/src/gtest
-    cmake CMakeLists.txt
+    # Build the application
+    cd /project/
+    cmake .
     make
-    mv lib/*.a /usr/lib
-    # Clean up
-    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 %files
     # Copy the CMake project files to the container
@@ -44,10 +41,9 @@ From: debian
     test/ /project/
     googletest/ /project/
     lib/ /project/
+    matrixA.txt /project/
+    matrixB.txt /project/
 
-%test
-    # Command to test the application
+%runscript
     cd /project/
-    cmake .
-    make
-    ctest -C Release --output-on-failure
+    exec mpirun -n 2 ./main
