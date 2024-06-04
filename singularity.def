@@ -30,8 +30,9 @@ From: debian
 
     # Build the application
     cd /project/
-    cmake .
+    cmake . --target main
     make
+    mv main ../
 
 %files
     # Copy the CMake project files to the container
@@ -39,10 +40,9 @@ From: debian
     include/ /project/
     src/ /project/
     test/ /project/
-    googletest/ /project/
     lib/ /project/
-    matrixA.txt /project/
-    matrixB.txt /project/
+    matrixA.txt /
+    matrixB.txt /
 
 %runscript
     cd /project/
