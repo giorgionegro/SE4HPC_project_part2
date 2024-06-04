@@ -68,7 +68,7 @@ jobs:
 
       # Install Singularity if not cached
       - name: Cache Singularity
-        uses: actions/cache/cache@v4
+        uses: actions/cache/restore@v4
         id: cache-singularity
         with:
           path: singularity_build
@@ -76,13 +76,17 @@ jobs:
 
       - name: Build Singularity
         if: steps.cache-singularity.outputs.cache-hit != 'true'
-        uses: actions/cache/save@v4
         run: |
           wget https://github.com/sylabs/singularity/releases/download/v4.1.3/singularity-ce-4.1.3.tar.gz
           tar -xzf singularity-ce-4.1.3.tar.gz
           cd singularity-ce-4.1.3
           ./mconfig
           make -C singularity_build
+        
+
+      - name: Save Singularity
+        if: steps.cache-singularity.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
         with:
           path: |
             /singularity_build/
