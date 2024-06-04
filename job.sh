@@ -4,5 +4,6 @@
 #SBATCH --time=00:20
 #SBATCH --ntasks=2
 
+module load openmpi
 export HWLOC_COMPONENTS=-gl
-singularity run --bind "$TMPDIR" matrix_multiplication.sif
+mpirun -n 2 singularity exec --bind "$TMPDIR" matrix_multiplication.sif /main

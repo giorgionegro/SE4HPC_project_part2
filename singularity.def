@@ -41,9 +41,4 @@ From: debian
     src/ /project/
     test/ /project/
     lib/ /project/
-    matrixA.txt /
-    matrixB.txt /
-
-%runscript
-    cd /project/
-    exec mpirun -n 2 ./main
+    googletest/ /project/
