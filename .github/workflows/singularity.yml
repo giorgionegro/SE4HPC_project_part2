@@ -36,7 +36,7 @@ jobs:
   Containerize_and_run:
     runs-on: ubuntu-latest
 
-    env: # Or as an environment variable
+    env:
       SSH_KEY: ${{ secrets.SSH_KEY }}
 
     steps:
@@ -51,12 +51,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y build-essential libseccomp-dev pkg-config squashfs-tools cryptsetup libfuse3-dev uidmap tzdata wget
 
-       # Install Go if not cached
       - name: Install Go
         uses: actions/setup-go@v5
-
-      # Install Singularity if not cached
-      - name: Cache Singularity
+        
+      - name: Restore Cached Singularity
         uses: actions/cache/restore@v4
         id: cache-singularity
         with:
@@ -92,9 +90,9 @@ jobs:
       - name: Install sshpass
         run: sudo apt-get install openssh-client
 
-      - name: Transfer files
+      - name: Transfer files and Run Job
         run: |
-          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=accept-new matrix_multiplication.txt a08trb64@login.g100.cineca.it:~
+          sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=accept-new matrix_multiplication.sif a08trb64@login.g100.cineca.it:~
           sshpass -p ${SSH_KEY} scp -o StrictHostKeyChecking=no job.sh a08trb64@login.g100.cineca.it:~
           sshpass -p ${SSH_KEY} ssh -o StrictHostKeyChecking=no a08trb64@login.g100.cineca.it -t "exec sbatch job.sh"
           
