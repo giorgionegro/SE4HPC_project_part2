@@ -1,0 +1,7 @@
+"sudo": executable file not found in $PATH
+"sudo": executable file not found in $PATH
+"sudo": executable file not found in $PATH
+"sudo": executable file not found in $PATH
+Congratulations, bro. Here is your resultant matrix C:
+58 64 
+139 154 
